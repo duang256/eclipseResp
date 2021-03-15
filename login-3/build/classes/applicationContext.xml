@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+        
+        
+        <context:property-placeholder location="classpath:db.properties"/>
+        
+        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        	<property name="driverClassName" value="${jdbc.driver}"></property>
+        	<property name="url" value="${jdbc.url}"></property>
+        	<property name="username" value="${jdbc.username}"></property>
+        	<property name="password" value="${jdbc.password}"></property>
+        </bean>
+        
+        <bean id="factory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        	<property name="dataSource" ref="dataSource"></property>
+        	<property name="typeAliasesPackage" value="cn.wit.pojo"></property>
+        </bean>
+        <bean id="configurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        	<property name="basePackage" value="cn.wit.mapper"></property>
+        	<property name="sqlSessionFactoryBeanName" value="factory"></property>
+        </bean>
+        
+        
+        
+        <bean id="loginServiceImpl" class="cn.wit.serviceImpl.LoginServiceImpl">
+        	<property name="usersMapper" ref="usersMapper"></property>
+        </bean>
+        
+        
+        <!--配置aop  -->
+        <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
+        <bean id="mybefore" class="cn.wit.advice.MyBefore"></bean>
+        <bean id="myafter" class="cn.wit.advice.MyAfter"></bean>
+        
+        <aop:config>
+        	<aop:pointcut expression="execution(* cn.wit.serviceImpl.LoginServiceImpl.login(..))" id="mypoint"/>
+        	<aop:advisor advice-ref="mybefore" pointcut-ref="mypoint"/>
+       		<aop:advisor advice-ref="myafter" pointcut-ref="mypoint"/>
+       	</aop:config>
+ </beans>

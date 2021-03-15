@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+        
+        
+         <!--代替mybatis中的mybatis.xml的功能  -->
+   		     <!--数据源  -->
+   		<context:property-placeholder location="classpath:db.properties"/>
+        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driver}"></property>
+		<property name="url" value="${jdbc.url}"></property>
+		<property name="username" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+		</bean>
+			<!--相当于mabatis中的工厂，spring帮助进行创建工厂 
+				 typeAliasesPackage标签相当于mybatis的typeAliases标签，类名可以简写-->
+		<bean id="factory" class="org.mybatis.spring.SqlSessionFactoryBean">
+			
+			<property name="dataSource" ref="dataSource"></property> 
+        	<property name="typeAliasesPackage" value="cn.wit.pojo"></property>
+		</bean>
+		
+			<!--相当于mappers标签  -->
+        <bean  class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+			 <property name="basePackage" value="cn.wit.mapper"></property>
+			<property name="sqlSessionFactoryBeanName" value="factory"></property>
+			<!-- <property name="sqlSessionFactory" ref="factory"></property> -->
+		</bean>
+        
+        
+        
+        <!--spring进行事务管理的类  -->
+        <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        	<property name="dataSource"></property>
+        </bean>
+        <!--配置声明式事务，本质上是切点的通知  -->
+        <tx:advice id="txAdvice" transaction-manager="txManager">
+        	<tx:attributes>
+        		<tx:method name="ins*"/>
+        		<tx:method name="del*"/>
+        		<tx:method name="upd*"/>
+        		<tx:method name="*"/>
+        	</tx:attributes>
+        </tx:advice>
+        <aop:config>
+        	<aop:pointcut expression="execution(* cn.wit.serviceImpl.*.*(..))" id="mypoint"/>
+        	<aop:advisor advice-ref="txAdvice" pointcut-ref="mypoint"/>
+        </aop:config>
+</beans>

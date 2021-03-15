@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+        <!--通过id获取对象，并不是对象的名字  -->
+        <!--数据源封装类 ,数据源：获取数据库连接 -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql://localhost:3306/login"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="wityy"></property>
+	</bean>
+	<bean id="factory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<!-- 扫描器相当于 mybatis.xml 中 mappers 下 package 标 签,扫描 cn.wit.mapper 包后会给对应接口创建对象-->
+	<bean  class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="cn.wit.mapper"></property>
+		<property name="sqlSessionFactory" ref="factory"></property>
+	</bean>
+	<bean id="airportService" class="cn.wit.serviceImpl.AirportServiceImpl">
+		<property name="airportMapper" ref="airportMapper"></property>
+	</bean>
+</beans>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+     xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+        
+        <context:property-placeholder location="classpath:db.properties"/>
+        
+        <!--代替mybatis中的mybatis.xml的功能  -->
+   		     <!--数据源  -->
+        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driver}"></property>
+		<property name="url" value="${jdbc.url}"></property>
+		<property name="username" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+		</bean>
+			<!--相当于mabatis中的工厂，spring帮助进行创建工厂 
+				 typeAliasesPackage标签相当于mybatis的typeAliases标签，类名可以简写-->
+		<bean id="factory" class="org.mybatis.spring.SqlSessionFactoryBean">
+			
+			<property name="dataSource" ref="dataSource"></property> 
+        	<property name="typeAliasesPackage" value="cn.wit.pojo"></property>
+		</bean>
+		
+			<!--相当于mappers标签  -->
+        <bean  class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+			 <property name="basePackage" value="cn.wit.mapper"></property>
+			<property name="sqlSessionFactoryBeanName" value="factory"></property>
+			<!-- <property name="sqlSessionFactory" ref="factory"></property> -->
+		</bean>
+        
+        	<!--Impl中注入mapper，name表示对象成员名，ref是mapper接口名首字母小写  -->
+        <bean id="usersService" class="cn.wit.serviceImpl.UsersServiceImpl">
+       		 <property name="usersMapper" ref="usersMapper"></property>
+        </bean>
+        
+        
+        <!--aop操作，用来管理项目中的业务方法，使得业务方法里边只做业务相关，比如日志记录的操作就交给切面的通知去做
+     	   spring需要实例化子类代理对象，所以必须用cglib方式(proxy-target-class为true) 
+        	配置切点，通知-->
+        <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
+        <bean id="mybefore" class="cn.wit.advice.MyBefore"></bean>
+        <bean id="myafter" class="cn.wit.advice.MyAfter"></bean>
+        <aop:config>
+        	<aop:pointcut expression="execution(* cn.wit.serviceImpl.UsersServiceImpl.login(..))" id="mypoint"/>
+        	<aop:advisor advice-ref="mybefore" pointcut-ref="mypoint"/>
+        	<aop:advisor advice-ref="myafter" pointcut-ref="mypoint"/>
+        </aop:config>
+        
+        
+        
+        
+        
+        
+        
+</beans>

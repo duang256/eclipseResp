@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  
+  <configuration>
+  <!--default表示使用id名为mysql的environment   通过这种方式选择不同的数据库  -->
+  	<environments default="mysql">
+  		<environment id="mysql">
+  			<transactionManager type="JDBC"></transactionManager>
+  			<!--数据库连接池技术，其中是四个不固定的数据库信息  -->
+  			<dataSource type="POOLED">
+  				<property name="driver" value="com.mysql.jdbc.Driver"/>
+  				<property name="url" value="jdbc:mysql://localhost:3306/login"/>
+  				<property name="username" value="root"/>
+  				<property name="password" value="wityy"/>
+  			</dataSource>
+  		</environment>
+  	</environments>
+  	
+  	<!--配置已经建立的 实体类  -->
+  <mappers>
+  	<mapper resource="cn/wit/mapper/FlowerMapper.xml"/>
+  </mappers>
+  </configuration>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+        <!--通过id获取对象，并不是对象的名字  -->
+	<bean id="peo" class="cn.wit.pojo.People">
+		<property name="id" value="2"></property>
+		<property name="name" value="李四"></property>
+		<property name="set">
+			<set>
+				<value>1</value>
+				<value>2</value>
+				<value>3</value>
+			</set>
+		</property>
+		<property name="list">
+			<list>
+				<value>1</value>
+				<value>2</value>
+				<value>3</value>
+			</list>
+		</property>
+		
+		<property name="map">
+			<map>
+				<entry key="a" value="张三"></entry>
+				<entry key="b" value="李四"></entry>
+				<entry key="c" value="王五"></entry>
+			</map>
+		</property>
+		<property name="array">
+			<array>
+				<value>1</value>
+				<value>2</value>
+				<value>3</value>
+			</array>
+		</property>
+		
+		
+		<property name="programmer" ref="pro"></property>
+		
+		
+	</bean>
+	
+	<bean id="pro" class="cn.wit.pojo.Programmer">
+		<property name="name" value="凌晨两点半"></property>
+		<property name="age" value="20"></property>
+	</bean>
+</beans>

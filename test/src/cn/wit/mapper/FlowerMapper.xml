@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--导入dtd  -->
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <!--一个mapper就是一个实体类，有各种操作方法用于操纵同一张数据表-->
+  <mapper namespace="flower">
+  <!--resultType是返回值类型  -->
+  	<select id="selAll" resultType="cn.wit.pojo.Flower">
+  		select *from flower
+  	</select>
+  	<select id="selOne" resultType="int">
+  		select count(*) from flower 
+  	</select>
+  	<select id="c" resultType="cn.wit.pojo.Flower">
+  		select * from flower 
+  	</select>
+  </mapper>

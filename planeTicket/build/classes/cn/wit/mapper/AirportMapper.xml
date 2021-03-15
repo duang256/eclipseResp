@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper>
+
+	<resultMap type="Airport" id="takeport">
+		<id column="id"  property="id"/>
+		<result column="portname" property="portName"/>
+		<result column="cityname" property="CityName"/>
+	</resultMap>
+	<select id="selTakePort" resultMap="takeport">
+		select *from airport where id in(select takeid from plane)
+	</select>	
+</mapper>
