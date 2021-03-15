@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--这里进行接口的绑定是为了传递多个参数 
+	namespace的名字必须和路径名一致
+	id名必须和接口中的方法名一致
+
+ -->
+<mapper namespace="cn.wit.mapper.FlowerMapper">
+	<select id="selAll" resultType="Flower">
+		select *from flower
+	</select>
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="cn.wit.mapper.FlowerMapper">
+
+	<!--实现增删查三个功能  -->
+  
+  
+  <!--动态SQL  -->
+  	<select id="sel"  resultType="Flower" >
+  		select * from flower 
+  		<where>
+  		<!-- 对name进行模糊查询  -->
+	  		<if test="_parameter!=null and _parameter!=''"> 
+	  		<bind name="flowerName" value="'%'+name+'%'"/>
+	  		and name like #{flowerName}
+	  		</if>
+		</where> 
+  	</select>
+  	
+  	<!--添加接口  -->
+  	<insert id="addOne"  >
+  		insert into flower values(default,#{name},#{price},#{production})
+  	</insert>
+  	
+  	
+  	<!--删除，没有新技术  -->
+  	<delete id="delOne" >
+  		delete from flower where name=#{name}
+  	</delete>
+  	
+  	
+  	<!--分页操作 -->
+  		<!--返回list，从pageStart个数据后一个开始，后面有pageSize条数据  -->
+  	<select id="selByPage" resultType="Flower" parameterType="map">
+		select * from flower limit #{pageStart},#{pageSize}
+	</select>
+		<!--数据的总条数，用来计算分页的页数  -->
+	<select id="selCount" resultType="int">
+		select count(*) from flower
+	</select>
+  	
+  </mapper>
+  

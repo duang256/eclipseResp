@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
+  <!--spring  -->
+  <context-param>
+  	<param-name>contextConfigLocation</param-name>
+  	<param-value>classpath:applicationContext.xml</param-value>
+  </context-param>
+  
+  <listener>
+  	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
+  <!--springmvc  -->
+ <servlet>
+ 	<servlet-name>springmvc</servlet-name>
+ 	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+ 	<init-param>
+ 		<param-name>contextConfigLocation</param-name>
+ 		<param-value>classpath:springmvc.xml</param-value>
+ 	</init-param>
+ 	<load-on-startup>1</load-on-startup>
+ </servlet>
+ 
+ <servlet-mapping>
+ 	<servlet-name>springmvc</servlet-name>
+ 	<!--拦截除了jsp之外所有的请求，如果写/*  包括jsp在内的所有请求都会被当做servlet别名，就请求不到jsp  
+ 		除了jsp之外，要是请求图片等静态资源，也会被当做sersvlet别名，这个一般在springmvc配置文件中过滤掉这些文件，让这些文件不走这个控制器-->
+ 	<url-pattern>/</url-pattern>
+ </servlet-mapping>
+ 
+<!--设置响应编码格式，resp.CharacterEncoding 
+请求编码格式一般jsp开头中都有设置content-type，使得通过jsp返回给后台的请求编码格式为utf-8,所以不用单独设置 -->
+<filter>
+	<filter-name>encoding</filter-name>
+	<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+	<init-param>
+		<param-name>encoding</param-name>
+		<param-value>utf-8</param-value>
+	</init-param>
+</filter> 
+<filter-mapping>
+	<filter-name>encoding</filter-name>
+	<url-pattern>/*</url-pattern>
+</filter-mapping>
+ 
+ 
+ <!--配置shiro  -->
+ <filter>
+ 	<filter-name>shiroFilter</filter-name>
+ 	<filter-class> org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+ 	<init-param>
+ 		<param-name>targetFilterLifecycle</param-name>
+ 		<param-value>true</param-value>
+ 	</init-param>
+ 	<init-param>
+ 		<param-name>targetBeanName</param-name>
+ 		<param-value>shiroFilter</param-value>
+ 	</init-param>
+ </filter>
+<filter-mapping>
+	<filter-name>shiroFilter</filter-name>
+	<url-pattern>/*</url-pattern>
+</filter-mapping> 
+ 
+ 
+ 
+</web-app>

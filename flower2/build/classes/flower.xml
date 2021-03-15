@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases >
+		<package name="cn.wit.pojo"/>
+	</typeAliases>
+	<environments default="mysql">  <!-- 两个mysql都是一个意思 default表示选择id为“mysql”的作为现在使用的数据库 -->
+		<environment id="mysql">
+			<transactionManager type="JDBC"></transactionManager>
+			<dataSource type="POOLED">
+				<property name="driver" value="com.mysql.jdbc.Driver" />
+				<property name="url" value="jdbc:mysql://localhost:3306/login" />
+				<property name="username" value="root" />
+				<property name="password" value="wityy" />
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<mappers>
+		<mapper resource="/cn/wit/mapper/FlowerMapper.xml"/><!--两个文件是相互关联的，组合在一起就是代替原来dao层的功能  -->
+	</mappers>
+</configuration>

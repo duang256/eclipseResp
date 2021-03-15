@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namesapce:理解成实现类的全路径(包名+类名) -->
+<mapper namespace="cn.wit.mapper.UsersMapper" >
+	
+	
+	<resultMap type="Users" id="mymap">
+		<id column="id" property="id"/>
+		<result column="username" property="username"/>
+		<result column="password" property="password"/>
+		<result column="rid" property="rid"/>
+	</resultMap>
+	<select id="selByUser" resultMap="mymap" parameterType="users">
+		select * from users where username = #{username} and password = #{password}
+	</select>
+	
+</mapper>

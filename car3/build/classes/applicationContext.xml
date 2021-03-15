@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+     xmlns:context="http://www.springframework.org/schema/context"
+     xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+         http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd" default-autowire="byName">
+		       
+		       
+		 <!--Impl包注解扫描  -->      
+        <context:component-scan base-package="cn.wit.serviceImpl"></context:component-scan>
+        
+        
+       <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+       		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+       		<property name="url" value="jdbc:mysql://localhost:3306/wit"></property>
+       		<property name="username" value="root"></property>
+       		<property name="password" value="wityy"></property>
+       </bean>
+       
+       <bean id="factory" class="org.mybatis.spring.SqlSessionFactoryBean">
+       	<property name="dataSource" ref="dataSource"></property>
+       	<!--设置简写  -->
+       	<property name="typeAliasesPackage" value="cn.wit.pojo"></property>
+       </bean>
+        
+        
+        
+        
+        <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--扫描mapper包  -->
+        	<property name="basePackage" value="cn.wit.mapper" ></property>
+        	<property name="sqlSessionFactoryBeanName" value="factory"></property>
+        </bean>
+        
+        
+        
+        
+        
+        <!--事务管理器  -->
+        <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        	<property name="dataSource" ref="dataSource"></property>
+        </bean>
+        <tx:advice id="txAdvice" transaction-manager="txManager">
+        	<tx:attributes>
+        		<tx:method name="ins*"/>
+        		<tx:method name="del*"/>
+        		<tx:method name="sel*"/>
+        		<tx:method name="upd*"/>
+        	</tx:attributes>
+        </tx:advice>
+        
+        <aop:config>
+        	<aop:pointcut expression="execution(* cn.wit.serviceImpl.*.*(..))" id="mypoint"/>
+        	<aop:advisor advice-ref="txAdvice" pointcut-ref="mypoint"/>
+        </aop:config>
+        
+        
+        <aop:aspectj-autoproxy  proxy-target-class="true"/>
+        
+</beans>  

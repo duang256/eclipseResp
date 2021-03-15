@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="cn.wit.mapper.MenuMapper">
+  <!--resultmap可以返回单个对象，也可以返回对个对象
+  这里希望通过一次调用拿到所有数据，通过map体现菜单层次
+  	外边Impl中传入0,然后resultmap查询到两个一级菜单，
+  	将一级菜单的id作为参数进行查询，与之前resultMap不同的是，
+  	之前是查询另一个select，这次是递归查询同一个
+  	比如其中一个一级菜单的id是1
+  	select *from menu where pid=1
+  	返回两条数据resultmap中collection存放两个对象，id分别是3,4
+  	比如id等于3的这条数据在创建对象时需要赋值collection，继续向下查找
+  	select *from menu where pid=3,此时数据库并没有这条数据，返回null,这条递归结束,其他递归同理
+    -->
+ 	<resultMap type="menu" id="mymap">
+ 		<id property="id" column="id"/>
+ 		<id property="name" column="name"/>
+ 		<collection property="children" select="cn.wit.mapper.MenuMapper.selByPid"  column="id"></collection>
+ 	</resultMap> 
+  	<select id="selByPid" parameterType="int" resultMap="mymap">
+  		select* from menu where pid=#{0}
+  	</select>
+  </mapper>
